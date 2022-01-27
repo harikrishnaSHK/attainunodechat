@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<h1>ATTAINU CHAT APPLICATION</h1>
+
+<pre id = "messages" style="height: 300px; overflow: scroll;">
+
+
+</pre>
+<input type="text" id = "messageBox" placeholder="Type your message here"/>
+
+
+
+<button id = "send" style=" width :200px;height:30px;color:white; background-color: blueviolet;">
+
+    send data to client
+</button>
+
+<script>
+
+(function(){    
+
+const buttonsend = document.querySelector('#send')
+const messages = document.querySelector('#messages')
+const messageBox = document.querySelector('#messageBox')
+
+function showMessage(message){
+
+messages.textContent += `\n\n${message}`
+messages.scrollTop = messages.scrollHeight
+messageBox.value = ''
+
+}
+
+
+const wsConnection = new WebSocket('ws://localhost:5000')
+
+wsConnection.addEventListener('open', ()=>{
+
+console.log("Connection to server is established")
+
+})
+
+
+wsConnection.addEventListener('message',(data)=>{
+
+
+
+
+
+data.data.text().then(text=>{
+
+let blodata = text
+console.log("Message from server ," + blodata)
+showMessage(blodata)
+
+})
+
+
+})
+
+
+
+
+buttonsend.onclick = function(){ 
+
+wsConnection.send(messageBox.value)
+
+}
+
+
+})()
+</script>
+</body>
+</html>
